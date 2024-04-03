@@ -24,7 +24,7 @@ class _WebViewAppState extends State<WebViewApp> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
   String _appBarTitle = 'Home'; // Initial title
-  bool isLoading=true;
+  bool isLoading = true;
   late WebViewController _controller;
   final List<String> _urls = [
     "https://www.orunacuisine.co.uk/",
@@ -35,7 +35,8 @@ class _WebViewAppState extends State<WebViewApp> {
   ];
 
   void _onItemTapped(int index) {
-    if (index == 3) { // Assuming "Call Now" is at index 3
+    if (index == 3) {
+      // Assuming "Call Now" is at index 3
       _makePhoneCall("01630 658 121");
     } else {
       setState(() {
@@ -45,12 +46,14 @@ class _WebViewAppState extends State<WebViewApp> {
       });
     }
   }
+
   @override
   void initState() {
     super.initState();
     // Enable JavaScript in the webview
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
+
   final List<String> _appBarTitles = [
     'Home',
     'Order',
@@ -68,70 +71,72 @@ class _WebViewAppState extends State<WebViewApp> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-          if (await _controller.canGoBack()) {
-            _controller.goBack();
-            return false;
-          } else {
-            return true;
-          }
-        },
-        child: Scaffold(
-           appBar: AppBar(
-    backgroundColor: Color(0xFF730f02),
-    title:  Text(_appBarTitle,style: TextStyle(color: Colors.white),),
-    ),
-             body: PageView(
-                controller: _pageController,
-                physics: NeverScrollableScrollPhysics(),
-                // onPageChanged: (int index) {
-                //   setState(() {
-                //     _selectedIndex = index;
-                //   });
-                // },
-                children: [
-                _buildWebView(_urls[0]), // Home
-                _buildWebView(_urls[1]), // Order
-                _buildWebView(_urls[2]), // Reserve
-                _buildWebView(_urls[3]), // Reserve
-                _buildWebView(_urls[4]), // Contact
-                ],
-    ),
-
-            bottomNavigationBar: BottomNavigationBar(
-    items: const <BottomNavigationBarItem>[
+      onWillPop: () async {
+        if (await _controller.canGoBack()) {
+          _controller.goBack();
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFF730f02),
+          title: Text(
+            _appBarTitle,
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        body: PageView(
+          controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
+          // onPageChanged: (int index) {
+          //   setState(() {
+          //     _selectedIndex = index;
+          //   });
+          // },
+          children: [
+            _buildWebView(_urls[0]), // Home
+            _buildWebView(_urls[1]), // Order
+            _buildWebView(_urls[2]), // Reserve
+            _buildWebView(_urls[3]), // Reserve
+            _buildWebView(_urls[4]), // Contact
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
             BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Order',
+              icon: Icon(Icons.shopping_cart),
+              label: 'Order',
             ),
             BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: 'Reserve',
+              icon: Icon(Icons.event),
+              label: 'Reserve',
             ),
             BottomNavigationBarItem(
-            icon: Icon(Icons.phone),
-            label: 'Call Now',
+              icon: Icon(Icons.phone),
+              label: 'Call Now',
             ),
             BottomNavigationBarItem(
-            icon: Icon(Icons.contact_mail),
-            label: 'Contact',
+              icon: Icon(Icons.contact_mail),
+              label: 'Contact',
             ),
-    ],
-    currentIndex: _selectedIndex,
-    selectedItemColor: Color(0xFF730f02), // Active color
-    unselectedItemColor: Colors.grey, // Inactive color
-    onTap: _onItemTapped,
-    type: BottomNavigationBarType.fixed,
-    ),
-    ),);
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Color(0xFF730f02), // Active color
+          unselectedItemColor: Colors.grey, // Inactive color
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+        ),
+      ),
+    );
   }
 
   Widget _buildWebView(String url) {
-
     return Stack(
       children: [
         WebView(
@@ -140,7 +145,8 @@ class _WebViewAppState extends State<WebViewApp> {
           onWebViewCreated: (controller) {
             _controller = controller;
           },
-          userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36', // Set user agent to mimic Chrome
+          userAgent:
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36', // Set user agent to mimic Chrome
           navigationDelegate: (NavigationRequest request) {
             // Add your navigation delegate logic here
             // if (request.url.startsWith('http://')) {
@@ -151,7 +157,7 @@ class _WebViewAppState extends State<WebViewApp> {
             if (request.url.startsWith('tel:')) {
               _handleTelLink(request.url);
               return NavigationDecision.prevent;
-            }else if (request.url.startsWith('mailto:')) {
+            } else if (request.url.startsWith('mailto:')) {
               _handleMailtoLink(request.url);
               return NavigationDecision.prevent;
             }
@@ -232,21 +238,22 @@ class _WebViewAppState extends State<WebViewApp> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        _makePhoneCall("0131378373")
-        ],
+        children: [_makePhoneCall("0131378373")],
       ),
     );
   }
+
   // Function to make the phone call
   _makePhoneCall(String phoneNumber) async {
     final url = 'tel:$phoneNumber';
     await launch(url);
   }
+
   void _handleTelLink(String url) async {
     final phoneNumber = url.substring(4); // Remove 'tel:'
     await launch('tel:$phoneNumber');
   }
+
   void _handleMailtoLink(String url) async {
     try {
       final emailAddress = Uri.decodeFull(url.substring(7));
@@ -266,6 +273,7 @@ class _WebViewAppState extends State<WebViewApp> {
       // Handle error gracefully, e.g., show a dialog
     }
   }
+
   void _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -274,4 +282,3 @@ class _WebViewAppState extends State<WebViewApp> {
     }
   }
 }
-
