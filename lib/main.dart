@@ -245,7 +245,8 @@ class _WebViewAppState extends State<WebViewApp> {
 
   // Function to make the phone call
   _makePhoneCall(String phoneNumber) async {
-    final url = 'tel:$phoneNumber';
+    final encodedPhoneNumber = Uri.encodeComponent(phoneNumber);
+    final url = 'tel:$encodedPhoneNumber';
     await launch(url);
   }
 
